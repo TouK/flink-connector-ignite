@@ -1,4 +1,4 @@
-# Apache Ignite connector fo Flink SQL
+# Apache Ignite connector for Flink SQL
 This connector allows reading data from Ignite tables using JDBC thin client.
 
 ## Dependencies
