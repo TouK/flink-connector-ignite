@@ -1,7 +1,6 @@
 package pl.touk.flink.ignite.dialect;
 
 import org.apache.flink.connector.jdbc.converter.JdbcRowConverter;
-import org.apache.flink.connector.jdbc.dialect.mysql.MySqlDialect;
 import org.apache.flink.connector.jdbc.dialect.psql.PostgresDialect;
 import org.apache.flink.table.types.logical.RowType;
 import pl.touk.flink.ignite.converter.IgniteRowConverter;
@@ -21,6 +20,11 @@ public class IgniteDialect extends PostgresDialect {
     @Override
     public JdbcRowConverter getRowConverter(RowType rowType) {
         return new IgniteRowConverter(rowType);
+    }
+
+    @Override
+    public String quoteIdentifier(String identifier) {
+        return "\"" + identifier + "\"";
     }
 
     @Override
