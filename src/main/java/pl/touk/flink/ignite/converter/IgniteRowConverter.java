@@ -1,6 +1,6 @@
 package pl.touk.flink.ignite.converter;
 
-import org.apache.flink.connector.jdbc.internal.converter.AbstractJdbcRowConverter;
+import org.apache.flink.connector.jdbc.converter.AbstractJdbcRowConverter;
 import org.apache.flink.table.types.logical.RowType;
 
 public class IgniteRowConverter extends AbstractJdbcRowConverter {

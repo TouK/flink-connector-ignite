@@ -1,7 +1,7 @@
 package pl.touk.flink.ignite.dialect;
 
+import org.apache.flink.connector.jdbc.converter.JdbcRowConverter;
 import org.apache.flink.connector.jdbc.dialect.JdbcDialect;
-import org.apache.flink.connector.jdbc.internal.converter.JdbcRowConverter;
 import org.apache.flink.table.types.logical.RowType;
 import pl.touk.flink.ignite.converter.IgniteRowConverter;
 
