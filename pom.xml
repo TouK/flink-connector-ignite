@@ -128,7 +128,6 @@ under the License.
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-<!--            // TODO_PAWEL this requires scala 2.12-->
             <artifactId>flink-table-planner_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
             <scope>test</scope>
