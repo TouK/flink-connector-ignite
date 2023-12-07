@@ -1,14 +1,15 @@
 package pl.touk.flink.ignite.dialect;
 
 import org.apache.flink.connector.jdbc.converter.JdbcRowConverter;
-import org.apache.flink.connector.jdbc.dialect.JdbcDialect;
+import org.apache.flink.connector.jdbc.dialect.mysql.MySqlDialect;
 import org.apache.flink.table.types.logical.RowType;
 import pl.touk.flink.ignite.converter.IgniteRowConverter;
 
 import java.util.Optional;
 
-public class IgniteDialect implements JdbcDialect {
-
+// what matters is that it implements org.apache.flink.connector.jdbc.dialect.JdbcDialect interface, concrete implementation used
+// as base class to have some method implemented
+public class IgniteDialect extends MySqlDialect {
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -17,23 +18,12 @@ public class IgniteDialect implements JdbcDialect {
     }
 
     @Override
-    public boolean canHandle(String url) {
-        return url.startsWith("jdbc:ignite:thin");
-    }
-
-    @Override
     public JdbcRowConverter getRowConverter(RowType rowType) {
         return new IgniteRowConverter(rowType);
-    }
-
-    @Override
-    public String getLimitClause(long l) {
-        return "LIMIT " + l;
     }
 
     @Override
     public Optional<String> defaultDriverName() {
         return Optional.of("org.apache.ignite.IgniteJdbcThinDriver");
     }
-
 }
