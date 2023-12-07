@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// TODO_PAWEL jest problem, jak sie zamieni wszystkie metody na throw runtime exception oprocz quoteIdentifier i getRowConverter to
+// testy dalej przechodza
 public class IgniteDialect extends AbstractDialect {
     private static final long serialVersionUID = 1L;
 
