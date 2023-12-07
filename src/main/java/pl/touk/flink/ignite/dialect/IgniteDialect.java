@@ -15,6 +15,15 @@ import java.util.stream.Collectors;
 public class IgniteDialect extends AbstractDialect {
     private static final long serialVersionUID = 1L;
 
+    // copied from PostgresDialect class
+    private static final int MAX_TIMESTAMP_PRECISION = 6;
+    // copied from PostgresDialect class
+    private static final int MIN_TIMESTAMP_PRECISION = 1;
+    // copied from PostgresDialect class
+    private static final int MAX_DECIMAL_PRECISION = 1000;
+    // copied from PostgresDialect class
+    private static final int MIN_DECIMAL_PRECISION = 1;
+
     @Override
     public String dialectName() {
         return "Ignite";
@@ -40,32 +49,11 @@ public class IgniteDialect extends AbstractDialect {
         return Optional.of("org.apache.ignite.IgniteJdbcThinDriver");
     }
 
-    // WARNING code below was taken from PostgresDialect, it can turn out to be wrong
-
-    private static final int MAX_TIMESTAMP_PRECISION = 6;
-    private static final int MIN_TIMESTAMP_PRECISION = 1;
-
-    private static final int MAX_DECIMAL_PRECISION = 1000;
-    private static final int MIN_DECIMAL_PRECISION = 1;
-
+    // not supported for now, probably merge can be used https://ignite.apache.org/docs/latest/sql-reference/dml#merge
     @Override
     public Optional<String> getUpsertStatement(
             String tableName, String[] fieldNames, String[] uniqueKeyFields) {
-        String uniqueColumns =
-                Arrays.stream(uniqueKeyFields)
-                        .map(this::quoteIdentifier)
-                        .collect(Collectors.joining(", "));
-        String updateClause =
-                Arrays.stream(fieldNames)
-                        .map(f -> quoteIdentifier(f) + "=EXCLUDED." + quoteIdentifier(f))
-                        .collect(Collectors.joining(", "));
-        return Optional.of(
-                getInsertIntoStatement(tableName, fieldNames)
-                        + " ON CONFLICT ("
-                        + uniqueColumns
-                        + ")"
-                        + " DO UPDATE SET "
-                        + updateClause);
+        return Optional.empty();
     }
 
     @Override
@@ -78,6 +66,7 @@ public class IgniteDialect extends AbstractDialect {
         return Optional.of(Range.of(MIN_TIMESTAMP_PRECISION, MAX_TIMESTAMP_PRECISION));
     }
 
+    // copied from PostgresDialect class
     @Override
     public Set<LogicalTypeRoot> supportedTypes() {
         return EnumSet.of(
