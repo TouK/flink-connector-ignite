@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class IgniteDialect extends AbstractDialect {
     private static final long serialVersionUID = 1L;
 
-    // copied from PostgresDialect class
-    private static final int MAX_TIMESTAMP_PRECISION = 6;
+    // value chosen based on https://ignite.apache.org/docs/latest/sql-reference/data-types#timestamp
+    private static final int MAX_TIMESTAMP_PRECISION = 9;
     // copied from PostgresDialect class
     private static final int MIN_TIMESTAMP_PRECISION = 1;
     // copied from PostgresDialect class
