@@ -6,11 +6,9 @@ import org.apache.flink.table.types.logical.LogicalTypeRoot;
 import org.apache.flink.table.types.logical.RowType;
 import pl.touk.flink.ignite.converter.IgniteRowConverter;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 // TODO_PAWEL jest problem, jak sie zamieni wszystkie metody na throw runtime exception oprocz quoteIdentifier i getRowConverter to
 // testy dalej przechodza
@@ -19,11 +17,8 @@ public class IgniteDialect extends AbstractDialect {
 
     // value chosen based on https://ignite.apache.org/docs/latest/sql-reference/data-types#timestamp
     private static final int MAX_TIMESTAMP_PRECISION = 9;
-    // copied from PostgresDialect class
     private static final int MIN_TIMESTAMP_PRECISION = 1;
-    // copied from PostgresDialect class
     private static final int MAX_DECIMAL_PRECISION = 1000;
-    // copied from PostgresDialect class
     private static final int MIN_DECIMAL_PRECISION = 1;
 
     @Override
@@ -68,7 +63,6 @@ public class IgniteDialect extends AbstractDialect {
         return Optional.of(Range.of(MIN_TIMESTAMP_PRECISION, MAX_TIMESTAMP_PRECISION));
     }
 
-    // copied from PostgresDialect class
     @Override
     public Set<LogicalTypeRoot> supportedTypes() {
         return EnumSet.of(
