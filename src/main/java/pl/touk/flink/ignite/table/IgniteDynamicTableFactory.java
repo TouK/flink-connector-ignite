@@ -112,8 +112,11 @@ public class IgniteDynamicTableFactory implements DynamicTableSourceFactory, Dyn
         JdbcConnectorOptions jdbcOptions = getJdbcOptions(config);
         JdbcDatePartitionReadOptions readOptions = getJdbcReadOptions(config).orElse(null);
 
+        // get table schema
+        TableSchema physicalSchema = TableSchemaUtils.getPhysicalSchema(context.getCatalogTable().getSchema());
+
         // table source
-        return new IgniteDynamicTableSource(jdbcOptions, readOptions, context.getCatalogTable().getResolvedSchema());
+        return new IgniteDynamicTableSource(jdbcOptions, readOptions, physicalSchema);
 
     }
 

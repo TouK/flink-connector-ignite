@@ -1,14 +1,15 @@
 package pl.touk.flink.ignite.table;
 
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.connector.jdbc.dialect.JdbcDialect;
 import org.apache.flink.connector.jdbc.internal.options.JdbcConnectorOptions;
 import org.apache.flink.connector.jdbc.table.JdbcRowDataInputFormat;
-import org.apache.flink.table.catalog.ResolvedSchema;
+import org.apache.flink.table.api.TableSchema;
 import org.apache.flink.table.connector.ChangelogMode;
 import org.apache.flink.table.connector.source.DynamicTableSource;
 import org.apache.flink.table.connector.source.InputFormatProvider;
 import org.apache.flink.table.connector.source.ScanTableSource;
-import org.apache.flink.table.types.DataType;
+import org.apache.flink.table.data.RowData;
 import org.apache.flink.table.types.logical.RowType;
 
 import java.time.LocalDate;
@@ -18,9 +19,9 @@ public class IgniteDynamicTableSource implements ScanTableSource {
 
     private final JdbcConnectorOptions options;
     private final JdbcDatePartitionReadOptions readOptions;
-    private final ResolvedSchema tableSchema;
+    private final TableSchema tableSchema;
 
-    public IgniteDynamicTableSource(JdbcConnectorOptions options, JdbcDatePartitionReadOptions readOptions, ResolvedSchema tableSchema) {
+    public IgniteDynamicTableSource(JdbcConnectorOptions options, JdbcDatePartitionReadOptions readOptions, TableSchema tableSchema) {
         this.options = options;
         this.readOptions = readOptions;
         this.tableSchema = tableSchema;
@@ -38,10 +39,9 @@ public class IgniteDynamicTableSource implements ScanTableSource {
         final JdbcDialect dialect = options.getDialect();
 
         String query = dialect.getSelectFromStatement(
-                options.getTableName(), tableSchema.getColumnNames().toArray(new String[0]), new String[0]);
+                options.getTableName(), tableSchema.getFieldNames(), new String[0]);
 
-        DataType rowDataType = tableSchema.toPhysicalRowDataType();
-        final RowType rowType = (RowType) rowDataType.getLogicalType();
+        final RowType rowType = (RowType) tableSchema.toRowDataType().getLogicalType();
 
         final JdbcRowDataInputFormat.Builder builder = JdbcRowDataInputFormat.builder()
                 .setDrivername(options.getDriverName())
@@ -50,7 +50,8 @@ public class IgniteDynamicTableSource implements ScanTableSource {
                 .setPassword(options.getPassword().orElse(null))
                 .setQuery(query)
                 .setRowConverter(dialect.getRowConverter(rowType))
-                .setRowDataTypeInfo(runtimeProviderContext.createTypeInformation(rowDataType));
+                .setRowDataTypeInfo(runtimeProviderContext
+                        .createTypeInformation(tableSchema.toRowDataType()));
 
         if (readOptions != null) {
             LocalDate lowerBound = readOptions.getPartitionLowerBound();
